@@ -166,7 +166,7 @@ flowchart TD
     I -->|"sentence len, TTR, punctuation, function words, burstiness"| H
 
     H -->|"groq×0.60 + stylo×0.40 → confidence_score"| J["Label Builder (labels.py)"]
-    J -->|"≥0.80 → high_confidence_ai / ≤0.25 → high_confidence_human / else → uncertain"| K["label — headline, body, confidence_display"]
+    J -->|"≥0.70 → high_confidence_ai / ≤0.30 → high_confidence_human / else → uncertain"| K["label — headline, body, confidence_display"]
 
     K -->|"content_id, text_hash, scores, label, status=decided"| L[("SQLite — audit_log")]
     K --> M(["Response — content_id, attribution, confidence_score, signals, label, timestamp"])
@@ -193,13 +193,13 @@ flowchart TD
 
 ## 6. Transparency Label Text (3 Variants)
 
-**High-confidence AI** (score ≥ 0.80):
+**High-confidence AI** (score ≥ 0.70):
 > "Our system is highly confident this content was AI-generated (confidence: {score}%). This content has been labeled accordingly. If you are the author and believe this is incorrect, you may submit an appeal."
 
-**High-confidence Human** (score ≤ 0.25):
+**High-confidence Human** (score ≤ 0.30):
 > "Our system is highly confident this content was written by a human (confidence: {100-score}%). No AI attribution label has been applied."
 
-**Uncertain** (score 0.26–0.79):
+**Uncertain** (score 0.31–0.69):
 > "Our system found mixed signals in this content and cannot confidently determine authorship (confidence: {score}% AI likelihood). No definitive label has been applied. If this is your original work, you may submit an appeal to have it reviewed."
 
 ---

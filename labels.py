@@ -2,9 +2,9 @@ def build(confidence_score: float) -> tuple[str, dict]:
     """
     Maps ensemble confidence score to attribution string and transparency label.
 
-    Thresholds (from planning.md):
-        >= 0.80  → high-confidence AI
-        <= 0.25  → high-confidence human
+    Thresholds:
+        >= 0.70  → high-confidence AI
+        <= 0.30  → high-confidence human
         else     → uncertain
 
     Returns:
@@ -14,7 +14,7 @@ def build(confidence_score: float) -> tuple[str, dict]:
     """
     score_pct = round(confidence_score * 100)
 
-    if confidence_score >= 0.80:
+    if confidence_score >= 0.70:
         return "ai", {
             "headline": "Likely AI-Generated",
             "body": (
@@ -25,7 +25,7 @@ def build(confidence_score: float) -> tuple[str, dict]:
             "confidence_display": f"{score_pct}% AI likelihood",
         }
 
-    if confidence_score <= 0.25:
+    if confidence_score <= 0.30:
         human_pct = 100 - score_pct
         return "human", {
             "headline": "Likely Human-Written",
