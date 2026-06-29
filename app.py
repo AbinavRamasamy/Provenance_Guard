@@ -28,8 +28,7 @@ with app.app_context():
 
 
 @app.route("/submit", methods=["POST"])
-@limiter.limit("100 per day")
-@limiter.limit("10 per minute")
+@limiter.limit("10 per minute;100 per day")
 def submit():
     data = request.get_json(silent=True)
     if not data:
@@ -79,11 +78,20 @@ def submit():
     }), 200
 
 
+@app.route("/appeal", methods=["POST"])
 @app.route("/appeal/<content_id>", methods=["POST"])
 @limiter.limit("5 per hour")
-def appeal(content_id):
+def appeal(content_id=None):
     data = request.get_json(silent=True)
-    if not data or "creator_reasoning" not in data:
+    if not data:
+        return jsonify({"error": "request body must be JSON"}), 400
+
+    if content_id is None:
+        content_id = data.get("content_id")
+        if not content_id:
+            return jsonify({"error": "missing required field: content_id"}), 400
+
+    if "creator_reasoning" not in data:
         return jsonify({"error": "missing required field: creator_reasoning"}), 400
 
     entry = db.get_entry(content_id)
